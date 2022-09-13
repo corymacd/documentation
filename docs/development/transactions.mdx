@@ -1,0 +1,24 @@
+---
+title: Transactions API
+---
+
+<head>
+    <meta name="title" content="Transactions API | Redpanda Docs"/>
+    <meta name="description" content="Implementing idempotent producers."/>
+</head>
+
+Main benefit = 'exactly-once' behavior
+
+The Transactions API is part of the Kafka API and enables "exactly-once" semantics. This means that if a producer is sending a message to Kafka and issues such as network connectivity or broker failure cause the producer to retry sending the mesage, Kafka guarantees that the consumer gets the message once and only once, or the transaction fails. This is important for applications that require very specific guarantees of message delivery, like financial transactions.
+This ensures consistency and atomicity of complex operations (encapsulated receiving/sending some amount of data across multiple topics into a single operation that can only succeed or fail globally).
+
+Additional benefits = Improving throughput and latency (surprising because normally you pay for these guarantees with performance). Our transactions are considerably faster than Kafka's (~6x), which better enables performance-oriented use cases.
+Transactions improve latency, throughput, and are available with the Kafka API.
+
+Upstream Kafka docs has a lot of contenct on this as well and Confluent: https://www.confluent.io/blog/transactions-apache-kafka/
+Learn the main concepts needed to use the transaction API in Apache Kafka effectively.
+
+HOW-TO
+- Enable transactions and idempotent producers (enable_idempotence: true & enable_transactions: true)
+- Increase replication factor of the internal topic (id_allocator_replication: 3 & transaction_coordinator_replication: 3)
+- Make sure transaction_coordinator_delete_retention_ms is at least as high as transactional_id_expiration_ms
