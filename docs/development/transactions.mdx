@@ -16,9 +16,11 @@ Additional benefits = Improving throughput and latency (surprising because norma
 Transactions improve latency, throughput, and are available with the Kafka API.
 
 Upstream Kafka docs has a lot of contenct on this as well and Confluent: https://www.confluent.io/blog/transactions-apache-kafka/
+
 Learn the main concepts needed to use the transaction API in Apache Kafka effectively.
 
 HOW-TO
 - Enable transactions and idempotent producers (enable_idempotence: true & enable_transactions: true)
 - Increase replication factor of the internal topic (id_allocator_replication: 3 & transaction_coordinator_replication: 3)
 - Make sure transaction_coordinator_delete_retention_ms is at least as high as transactional_id_expiration_ms
+- 
