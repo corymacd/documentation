@@ -8,28 +8,36 @@ title: Transactions API
 </head>
 
 The Transactions API guarantees both exactly-once semantics and atomicity. 
-- Exactly-once semantics is possible with [Idempotent Producers](/docs/development/idempotent-producers). 
-- Atomicity additionally commits a set of messages across partitions as a unit: either all messages are committed, or none of them are. Encapsulated data received or sent across multiple topics into a single operation can only succeed or fail globally. 
+- Exactly-once semantics helps developers avoid the anomalies of at-most-once processing (with potential lost events) and at-least-once processing (with potential duplicated events). Redpanda supports exactly-once semantics with [Idempotent Producers](/docs/development/idempotent-producers). 
+- Atomicity additionally commits a set of messages across partitions as a unit: either all messages are committed, or none. Encapsulated data received or sent across multiple topics into a single operation can only succeed or fail globally. 
 
-If a producer is sending a message, and network connectivity or broker failure cause the producer to retry sending the message, the consumer gets the message once and only once, or the transaction fails. This is important for applications that require very specific guarantees of message delivery, like financial transactions.
+If a producer is sending a message, and network connectivity or broker failure cause the producer to retry sending the message, the consumer gets the message once and only once, or the transaction fails. This is important for applications that require specific guarantees of message delivery, like financial transactions.
 
-The Transactions API (part of the Kafka API) ensures consistency and atomicity of complex operations. It also improves throughput and latency. Redpanda transactions are about 6x faster than Kafka's, enabling better performance-oriented use cases.
+Because the Transactions API is part of the Kafka API, you can use your favorite client libraries to work with it. For example, you can fetch messages starting from the last consumed offset and transactionally process them one by one, updating the last consumed offset and producing events at the same time. And because Redpanda transactions are about 6x faster than Kafka's, you see improved throughput and latency.
 
 ## Enabling transactions
 
-How do I use transactions? (how to enable, parameters, how to use them)
+Idempotence must be enabled to use transactions. By default, the following cluster properties are enabled: `enable_idempotence` and `enable_transactions`.
 
-1. Enable idempotent producers and transactions: 
-   
-   - `enable_idempotence: true` (In 22.1, default was false. Check if property default is now true AND `enable_transactions=true` on the producer/client side.)
-   - `enable_transactions: true` (producer/client must also have `enable_idempotence=true`.)
-
-   Explain how to set up the producer (client side).
-
-2. Increase the replication factor of the internal topic: 
+To facilitate transactions, increase the replication factor of the internal topic in the following properties: 
    - `id_allocator_replication: 3`
    - `transaction_coordinator_replication: 3`
 
-3. Make sure `transaction_coordinator_delete_retention_ms` is at least as high as `transactional_id_expiration_ms`.
-   
-   If you increase `transactional_id_expiration_ms`, you must increase     `transaction_coordinator_delete_retention_ms` by at least the same amount. The default setting is the same for both: 604800000 ms (1 week). 
+:::note
+Make sure `transaction_coordinator_delete_retention_ms` is at least as high as `transactional_id_expiration_ms`. The default setting for both properties is 604800000 ms (1 week). If you increase `transactional_id_expiration_ms`, you must increase `transaction_coordinator_delete_retention_ms` by at least the same amount. 
+:::
+
+See [Configuring cluster properties](/docs/cluster-administration/cluster-property-configuration).
+
+## Using transactions
+
+
+## Suggested reading
+
+- [Kafka-compatible fast distributed transactions](https://redpanda.com/blog/fast-transactions)
+
+## Questions for Denis/Matt
+- To enable transactions, does anything else need to be done to set up the producer/client side? e.g., do users need to do/know anything about transactional.id? 
+- Is the default still 1 for `id_allocator_replication` and `transaction_coordinator_replication`?
+- Can you provide an example for Using transactions? 
+- Is there a use case for wanting to disable transactions? 
