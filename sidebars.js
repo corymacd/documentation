@@ -410,8 +410,8 @@
     },
     {
       type: 'doc',
-      label: 'Cloud Intro',
-      id: 'cloud/index',
+      label: 'Redpanda Cloud Overview',
+      id: 'cloud/overview',
     },
     {
       type: 'category',
