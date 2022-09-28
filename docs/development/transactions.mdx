@@ -17,7 +17,7 @@ Because the Transactions API is part of the Kafka API, you can use your favorite
 
 ## Enabling transactions
 
-Idempotence must be enabled to use transactions. By default, the following cluster properties are enabled: `enable_idempotence` and `enable_transactions`.
+Idempotence must be enabled to use transactions. By default, the following cluster properties are enabled: `enable_idempotence` and `enable_transactions`. See [Idempotent Producers](/docs/development/idempotent-producers). 
 
 To facilitate transactions, increase the replication factor of the internal topic in the following properties: 
    - `id_allocator_replication: 3`
