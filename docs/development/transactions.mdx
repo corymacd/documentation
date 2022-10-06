@@ -8,7 +8,7 @@ title: Transactions API
 </head>
 
 The Transactions API guarantees both exactly-once semantics and atomicity. 
-- Exactly-once semantics helps developers avoid the anomalies of at-most-once processing (with potential lost events) and at-least-once processing (with potential duplicated events). Redpanda supports exactly-once semantics with [Idempotent Producers](/docs/development/idempotent-producers). 
+- Exactly-once semantics helps developers avoid the anomalies of at-most-once processing (with potential duplicated events) and at-least-once processing (with potential lost events). Redpanda supports exactly-once semantics with [Idempotent Producers](/docs/development/idempotent-producers). 
 - Atomicity additionally commits a set of messages across partitions as a unit: either all messages are committed, or none. Encapsulated data received or sent across multiple topics into a single operation can only succeed or fail globally. 
 
 If a producer is sending a message, and network connectivity or broker failure cause the producer to retry sending the message, the consumer gets the message once and only once, or the transaction fails. This is important for applications that require specific guarantees of message delivery, like financial transactions.
