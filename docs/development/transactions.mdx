@@ -13,9 +13,236 @@ The Transactions API guarantees both exactly-once semantics and atomicity.
 
 If a producer is sending a message, and network connectivity or broker failure cause the producer to retry sending the message, the consumer gets the message once and only once, or the transaction fails. This is important for applications that require specific guarantees of message delivery, like financial transactions.
 
-Because the Transactions API is part of the Kafka API, you can use your favorite client libraries to work with it. For example, you can fetch messages starting from the last consumed offset and transactionally process them one by one, updating the last consumed offset and producing events at the same time. And because Redpanda transactions are about 6x faster than Kafka's, you see improved throughput and latency.
+Because the Transactions API is part of the Kafka API, you can use your favorite client libraries to work with it. For example, you can fetch messages starting from the last consumed offset and transactionally process them one by one, updating the last consumed offset and producing events at the same time. Redpanda transactions are about 6x faster than Kafka's, so you also see improved throughput and latency.
 
-## Enabling transactions
+## Use transactions
+
+Transactions has two main use cases:
+
+- Atomic (all or nothing) publishing to multiple partitions
+- Atomic (exactly once semantics) consume-transform-produce loop
+
+### Publish to multiple partitions
+
+A banking IT system illustrates the necessity for transactions with its event sourcing-based microservice architecture. A bank has multiple branches, and each branch is an independent microservice that manages its own non-intersecting set of accounts. Each branch keeps its own ledger, which is represented as a Redpanda partition. When a branch-representing microservice starts, it replays its ledger to reconstruct the actual state.
+
+Financial transactions (money transfers) require the following guarantees:
+
+- A sender can't withdraw more than the account withdrawal limit.
+- A recipient receives exactly the same amount the sender sends.
+- A transaction is fast and is run at most once.
+- If a transaction fails, the system rolls back to the initial state.
+- Without withdrawal and deposits, the amount of money in the system remains constant with any history of money transfers.
+
+These requirements are easy to satisfy when the sender and the recipient of a financial transaction are hosted by the same branch. The operation doesn't leave the consistency domain, and all checks and locks can be performed within a single service (ledger).
+
+Things get more complex with cross-branch financial transactions, because they involve several ledgers, and the operations should be performed atomically (all or nothing). The default approach (saga pattern) breaks a transaction into a sequence of reversible idempotent steps. But this violates the isolation principle and adds complexity, making the app responsible for orchestrating the steps. 
+
+Redpanda natively supports transactions, so it's possible to atomically update several ledgers at the same time. For example:
+
+```
+   Properties props = new Properties();
+   props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "...");
+   props.put(ProducerConfig.ACKS_CONFIG, "all");
+   props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+   props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "app-id");
+ 
+   Producer<String, String> producer = null;
+ 
+   while (true) {
+       // waiting for somebody to initiate a financial transaction
+       var sender_branch = ...;
+       var sender_account = ...;
+       var recepient_branch = ...;
+       var recepient_account = ...;
+       var amount = 42;
+ 
+       if (producer == null) {
+           try {
+               producer = new KafkaProducer<>(props);
+               producer.initTransactions();
+           } catch (Exception e1) {
+               // TODO: log error for further analysis
+               try {
+                   if (producer != null) {
+                       producer.close();
+                   }
+               } catch(Exception e2) { }
+               producer = null;
+               // TODO: notify the initiator of a transaction about the failure
+               continue;
+           }
+       }
+ 
+       producer.beginTransaction();
+       try {
+           var f1 = producer.send(new ProducerRecord<String, String>("ledger", sender_branch, sender_account, "" + (-amount)));
+           var f2 = producer.send(new ProducerRecord<String, String>("ledger", recepient_branch, recepient_account, "" + amount));
+           f1.get();
+           f2.get();
+       } catch (Exception e1) {
+           // TODO: log error for further analysis
+           try {
+               producer.abortTransaction();
+           } catch (Exception e2) {
+               // TODO: log error for further analysis
+               try {
+                   producer.close();
+               } catch (Exception e3) { }
+               producer = null;
+           }
+           // TODO: notify the initiator of a transaction about the failure
+           continue;
+       }
+ 
+       try {
+           producer.commitTransaction();
+       } catch (Exception e1) {
+           try {
+               producer.close();
+           } catch (Exception e3) {}
+           producer = null;
+           // TODO: notify the initiator of a transaction about the failure
+           continue;
+       }
+ 
+       // TODO: notify the initiator of a transaction about the success
+   }
+```
+
+The majority of the code is error handling. When a tx fails before the `commitTransaction` attempt, it's safe to assume that it wasn't executed. When it fails after the `commitTransaction` attempt, the true status is unknown. Redpanda only guarantees that there isn't a partial result: either the transaction is committed, or it is fully rolled back.
+
+### Consume-transform-produce loop
+
+Redpanda is commonly used as a pipe connecting different data storage. An app could use an OLTP database and then rely on change data capture to deliver the changes to an analytical warehouse. Transactions turn Redpanda into a smart pipe. Instead of just opaque data transfering, the system can do transformations on the data, like lookups or aggregations.
+
+For example, here is the regular pipe flow:
+
+```
+	Postgresql -> topic -> warehouse
+```
+
+Here is the smart pipe flow, with a transformation in `topic(1) -> topic(2)`:
+
+```
+	Postgresql -> topic(1) -> topic(2) -> warehouse
+```
+
+The transformation reads a record from topic(1), processes it, and writes it to topic(2). Without transactions, an intermittent error can cause a message to be lost or processed several times. With transactions, Redpanda guarantees exactly once processing. For example:
+
+```
+   var source = "source-topic";
+   var target = "target-topic"
+ 
+   Properties pprops = new Properties();
+   pprops.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "...");
+   pprops.put(ProducerConfig.ACKS_CONFIG, "all");
+   pprops.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
+   pprops.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.newUUID());
+ 
+   Properties cprops = new Properties();
+   cprops.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "...");
+   cprops.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+   cprops.put(ConsumerConfig.GROUP_ID_CONFIG, "app-id");
+   cprops.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+   cprops.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
+ 
+   Consumer<String, String> consumer = null;
+   Producer<String, String> producer = null;
+ 
+   boolean should_reset = false;
+ 
+   while (true) {
+       if (should_reset) {
+           should_reset = false;
+ 
+           if (consumer != null) {
+               try {
+                   consumer.close();
+               } catch(Exception e) {}
+               consumer = null;
+           }
+ 
+           if (producer != null) {
+               try {
+                   producer.close();
+               } catch (Exception e2) {}
+               producer = null;
+           }
+       }
+ 
+       try {
+           if (consumer == null) {
+               consumer = new KafkaConsumer<>(cprops);
+               consumer.subscribe(Collections.singleton(source));
+           }
+       } catch (Exception e1) {
+           // TODO: log error for further analysis
+           should_reset = true;
+           continue;
+       }
+ 
+       try {
+           if (producer == null) {
+               producer = new KafkaProducer<>(pprops);
+               producer.initTransactions();
+           }
+       } catch (Exception e1) {
+           // TODO: log error for further analysis
+           should_reset = true;
+           continue;
+       }
+ 
+       ConsumerRecords<String, String> records = null;
+       try {
+           records = consumer.poll(Duration.ofMillis(10000));
+       } catch (Exception e1) {
+           // TODO: log error for further analysis
+           should_reset = true;
+           continue;
+       }
+ 
+       var it = records.iterator();
+       while (it.hasNext()) {
+           var record = it.next();
+ 
+           // transformation
+           var old_value = record.value();
+           var new_value = old_value.toUpperCase();
+          
+           try {
+               producer.beginTransaction();
+               producer.send(new ProducerRecord<String, String>(target, record.key(), new_value));
+               var offsets = new HashMap<TopicPartition, OffsetAndMetadata>();
+               offsets.put(new TopicPartition(source, record.partition()), new OffsetAndMetadata(record.offset() + 1));
+               producer.sendOffsetsToTransaction(offsets, consumer.groupMetadata());
+           } catch (Exception e1) {
+               // TODO: log error for further analysis
+               try {
+                   producer.abortTransaction();
+               } catch (Exception e2) { }
+               should_reset = true;
+               break;
+           }
+          
+           try {
+               producer.commitTransaction();
+           } catch (Exception e1) {
+               // TODO: log error for further analysis
+               should_reset = true;
+               break;
+           }
+       }
+   }
+```
+
+In the multi-partition example, the request was coming from outside the system, and it was the app's responsibility to discover the true status of a timed out transaction. 
+
+The consume-transform-loop example, however, is a closed system. Upon re-initialization of the consumer and producer, the system automatically discovers the moment it was interrupted and continues from that place.
+
+Additionally, the consume-transform-loop automatically scales by the number of partitions. Run another instance of the app, and it starts processing its share of partitions in the source topic.
+
+## Enable transactions
 
 Idempotence must be enabled to use transactions. By default, the following cluster properties are enabled: `enable_idempotence` and `enable_transactions`. See [Idempotent Producers](/docs/development/idempotent-producers). 
 
@@ -28,9 +255,6 @@ Make sure `transaction_coordinator_delete_retention_ms` is at least as high as `
 :::
 
 See [Configuring cluster properties](/docs/cluster-administration/cluster-property-configuration).
-
-## Using transactions
-
 
 ## Suggested reading
 
