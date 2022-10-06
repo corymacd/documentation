@@ -4,6 +4,19 @@ title: Redpanda Cloud Overview
 
 <head>
     <meta name="title" content="Redpanda Cloud Overview | Redpanda Docs"/>
-    <meta name="description" content="Redpanda Cloud offers two ways to create a cluster: dedicated cloud and Bring Your Own Cloud (BYOC)."/>
+    <meta name="description" content="Redpanda Cloud offers two ways to create a cluster: Dedicated Cloud and Bring Your Own Cloud (BYOC)."/>
 </head>
+
+Redpanda offers two ways to provision clusters in the cloud:
+* Dedicated Cloud
+* Bring Your Own Cloud (BYOC)
+
+## Dedicated Cloud
+
+Dedicated cloud clusters allow you to host your data in Redpanda’s Virtual Private Cloud (VPC) and have Redpanda handle the provisioning, operations, and maintenance for you. Redpanda also performs automatic backups to S3 (for AWS) or GCS (for GCP).
+
+## BYOC
+
+BYOC allows you to deploy Redpanda in your own VPC, keeping all data in your own environment, while still having Redpanda handle provisioning, monitoring, and upgrades. You can choose AWS or GCP as your cloud provider.
+The following architecture diagram illustrates the communication between the control plane and the data plane when you use a VPC in AWS:
 
