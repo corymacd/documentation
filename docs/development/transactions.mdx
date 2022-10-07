@@ -7,24 +7,24 @@ title: Transactions API
     <meta name="description" content="The Transactions API gurantees both atomicity and exactly-once semantics. "/>
 </head>
 
-The Transactions API guarantees both exactly-once semantics and atomicity. 
-- Exactly-once semantics helps developers avoid the anomalies of at-most-once processing (with potential duplicated events) and at-least-once processing (with potential lost events). Redpanda supports exactly-once semantics with [Idempotent Producers](/docs/development/idempotent-producers). 
+The Transactions API guarantees both exactly-once semantics (EOS) and atomicity. 
+- EOS helps developers avoid the anomalies of at-most-once processing (with potential duplicated events) and at-least-once processing (with potential lost events). Redpanda supports EOS with [Idempotent Producers](/docs/development/idempotent-producers). 
 - Atomicity additionally commits a set of messages across partitions as a unit: either all messages are committed, or none. Encapsulated data received or sent across multiple topics into a single operation can only succeed or fail globally. 
 
 If a producer is sending a message, and network connectivity or broker failure cause the producer to retry sending the message, the consumer gets the message once and only once, or the transaction fails. This is important for applications that require specific guarantees of message delivery, like financial transactions.
 
-Because the Transactions API is part of the Kafka API, you can use your favorite client libraries to work with it. For example, you can fetch messages starting from the last consumed offset and transactionally process them one by one, updating the last consumed offset and producing events at the same time. Redpanda transactions are about 6x faster than Kafka's, so you also see improved throughput and latency.
+Because the Transactions API is part of the Kafka API, you can use your favorite client libraries to work with it. For example, you can fetch messages starting from the last consumed offset and transactionally process them one by one, updating the last consumed offset and producing events at the same time. Redpanda transactions are about 6x faster than Kafka's, so there's also improved throughput and latency.
 
 ## Use transactions
 
-Transactions has two main use cases:
+There are two main use cases for transactions:
 
 - Atomic (all or nothing) publishing to multiple partitions
-- Atomic (exactly once semantics) consume-transform-produce loop
+- Atomic (EOS) consume-transform-produce loop
 
-### Publish to multiple partitions
+### Atomic publishing to multiple partitions
 
-A banking IT system illustrates the necessity for transactions with its event sourcing-based microservice architecture. A bank has multiple branches, and each branch is an independent microservice that manages its own non-intersecting set of accounts. Each branch keeps its own ledger, which is represented as a Redpanda partition. When a branch-representing microservice starts, it replays its ledger to reconstruct the actual state.
+A banking IT system illustrates the necessity for transactions with its event sourcing microservice architecture. A bank has multiple branches, and each branch is an independent microservice that manages its own non-intersecting set of accounts. Each branch keeps its own ledger, which is represented as a Redpanda partition. When a branch-representing microservice starts, it replays its ledger to reconstruct the actual state.
 
 Financial transactions (money transfers) require the following guarantees:
 
@@ -110,11 +110,13 @@ Redpanda natively supports transactions, so it's possible to atomically update s
    }
 ```
 
-The majority of the code is error handling. When a tx fails before the `commitTransaction` attempt, it's safe to assume that it wasn't executed. When it fails after the `commitTransaction` attempt, the true status is unknown. Redpanda only guarantees that there isn't a partial result: either the transaction is committed, or it is fully rolled back.
+When a tx fails before the `commitTransaction` attempt, it's safe to assume that it was not executed. When it fails after the `commitTransaction` attempt, the true status is unknown. Redpanda only guarantees that there isn't a partial result: either the transaction is committed, or it is fully rolled back.
 
-### Consume-transform-produce loop
+### Atomic consume-transform-produce loop
 
-Redpanda is commonly used as a pipe connecting different data storage. An app could use an OLTP database and then rely on change data capture to deliver the changes to an analytical warehouse. Transactions turn Redpanda into a smart pipe. Instead of just opaque data transfering, the system can do transformations on the data, like lookups or aggregations.
+Redpanda is commonly used as a pipe connecting different data storage. An app could use an OLTP database and then rely on change data capture to deliver the changes to a data warehouse. 
+
+Transactions turn Redpanda into a smart pipe. Instead of just opaque data transfering, the system can do transformations (like lookups or aggregations) on the data.
 
 For example, here is the regular pipe flow:
 
@@ -236,9 +238,9 @@ The transformation reads a record from topic(1), processes it, and writes it to 
    }
 ```
 
-In the multi-partition example, the request was coming from outside the system, and it was the app's responsibility to discover the true status of a timed out transaction. 
+In the publishing to multiple partitions example, the request was coming from outside the system, and it was the app's responsibility to discover the true status of a timed out transaction. 
 
-The consume-transform-loop example, however, is a closed system. Upon re-initialization of the consumer and producer, the system automatically discovers the moment it was interrupted and continues from that place.
+This consume-transform-loop example, however, is a closed system. Upon re-initialization of the consumer and producer, the system automatically discovers the moment it was interrupted and continues from that place.
 
 Additionally, the consume-transform-loop automatically scales by the number of partitions. Run another instance of the app, and it starts processing its share of partitions in the source topic.
 
