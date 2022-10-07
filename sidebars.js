@@ -414,6 +414,16 @@
       id: 'cloud/overview',
     },
     {
+      type: 'doc',
+      label: 'Create a Dedicated Cloud Cluster',
+      id: 'cloud/create-dedicated-cloud-cluster',
+    },
+    {
+      type: 'doc',
+      label: 'Managed Connectors',
+      id: 'cloud/managed-connectors',
+    },
+    {
       type: 'category',
       label: 'Kubernetes',
       items: [
