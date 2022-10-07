@@ -104,9 +104,23 @@ sudo rpk iotune # takes 10mins
 
 :::
 
+### Start the initalization process
+
+Redpanda provides an explicit initialization process where node IDs are automatically generated. This simplifies deployment for testing a multi-node cluster. 
+
+You can still form clusters by setting up a root node with its ID set to 0. This configuration, which is the default, requires that all nodes have a unique node_id set in their config files, and exactly one node must have seed_servers empty in its config file. With this implicit initialization, orchestrators must be careful not to add new nodes with the same node_id as previously decommissioned nodes.
+
+With Redpanda's explicit initialization:
+- Node IDs can be omitted from config files.
+- All nodes can have identical seed_servers in their config file.
+- Orchestrators omitting node_id do not need to worry about policies on node_id re-use, as Redpanda picks the IDs.
+
+<!---
 ### Configure and start the root node
 
-After the software is installed, you must configure it. The first step is
+After the software is installed, you must configure it. 
+ 
+The first step is
 to set up the root node. The root node starts as a standalone node, and
 every other one joins it, forming a cluster along the way.
 
@@ -130,6 +144,7 @@ sudo rpk config bootstrap --id <unique id> \
 --ips <root node ip> &&                    \
 sudo systemctl start redpanda-tuner redpanda
 ```
+--->
 
 ### Verify the installation
 
