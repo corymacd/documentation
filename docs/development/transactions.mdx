@@ -116,7 +116,7 @@ When a transaction fails before the `commitTransaction` attempt, it's safe to as
 
 Redpanda is commonly used as a pipe connecting different data storage. An application could use an OLTP database and then rely on change data capture to deliver the changes to a data warehouse. 
 
-Transactions turn Redpanda into a smart pipe. Instead of just opaque data transfering, the system can do transformations (like lookups or aggregations) on the data.
+Transactions turn Redpanda into a smart pipe. Instead of just opaque data transferring, the system can do transformations (like lookups or aggregations) on the data.
 
 For example, here is the regular pipe flow:
 
