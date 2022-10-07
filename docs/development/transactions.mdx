@@ -36,7 +36,7 @@ Financial transactions (money transfers) require the following guarantees:
 
 These requirements are easy to satisfy when the sender and the recipient of a financial transaction are hosted by the same branch. The operation doesn't leave the consistency domain, and all checks and locks can be performed within a single service (ledger).
 
-Things get more complex with cross-branch financial transactions, because they involve several ledgers, and the operations should be performed atomically (all or nothing). The default approach (saga pattern) breaks a transaction into a sequence of reversible idempotent steps. But this violates the isolation principle and adds complexity, making the app responsible for orchestrating the steps. 
+Things get more complex with cross-branch financial transactions, because they involve several ledgers, and the operations should be performed atomically (all or nothing). The default approach (saga pattern) breaks a transaction into a sequence of reversible idempotent steps. But this violates the isolation principle and adds complexity, making the application responsible for orchestrating the steps. 
 
 Redpanda natively supports transactions, so it's possible to atomically update several ledgers at the same time. For example:
 
@@ -53,8 +53,8 @@ Redpanda natively supports transactions, so it's possible to atomically update s
        // waiting for somebody to initiate a financial transaction
        var sender_branch = ...;
        var sender_account = ...;
-       var recepient_branch = ...;
-       var recepient_account = ...;
+       var recipient_branch = ...;
+       var recipient_account = ...;
        var amount = 42;
  
        if (producer == null) {
@@ -77,7 +77,7 @@ Redpanda natively supports transactions, so it's possible to atomically update s
        producer.beginTransaction();
        try {
            var f1 = producer.send(new ProducerRecord<String, String>("ledger", sender_branch, sender_account, "" + (-amount)));
-           var f2 = producer.send(new ProducerRecord<String, String>("ledger", recepient_branch, recepient_account, "" + amount));
+           var f2 = producer.send(new ProducerRecord<String, String>("ledger", recipient_branch, recipient_account, "" + amount));
            f1.get();
            f2.get();
        } catch (Exception e1) {
@@ -110,7 +110,7 @@ Redpanda natively supports transactions, so it's possible to atomically update s
    }
 ```
 
-When a tx fails before the `commitTransaction` attempt, it's safe to assume that it was not executed. When it fails after the `commitTransaction` attempt, the true status is unknown. Redpanda only guarantees that there isn't a partial result: either the transaction is committed, or it is fully rolled back.
+When a transaction fails before the `commitTransaction` attempt, it's safe to assume that it was not executed. When it fails after the `commitTransaction` attempt, the true status is unknown. Redpanda only guarantees that there isn't a partial result: either the transaction is committed, or it is fully rolled back.
 
 ### Atomic consume-transform-produce loop
 
@@ -242,7 +242,7 @@ In the publishing to multiple partitions example, the request was coming from ou
 
 This consume-transform-loop example, however, is a closed system. Upon re-initialization of the consumer and producer, the system automatically discovers the moment it was interrupted and continues from that place.
 
-Additionally, the consume-transform-loop automatically scales by the number of partitions. Run another instance of the app, and it starts processing its share of partitions in the source topic.
+Additionally, the consume-transform-loop automatically scales by the number of partitions. Run another instance of the application, and it starts processing its share of partitions in the source topic.
 
 ## Enable transactions
 
