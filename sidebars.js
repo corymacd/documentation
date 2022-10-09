@@ -415,8 +415,13 @@
     },
     {
       type: 'doc',
-      label: 'Create a Dedicated Cloud Cluster',
+      label: 'Creating a Dedicated Cloud Cluster',
       id: 'cloud/create-dedicated-cloud-cluster',
+    },
+    {
+      type: 'doc',
+      label: 'Creating a Topic',
+      id: 'cloud/create-topic',
     },
     {
       type: 'category',
