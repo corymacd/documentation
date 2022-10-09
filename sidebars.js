@@ -419,18 +419,13 @@
       id: 'cloud/create-dedicated-cloud-cluster',
     },
     {
-      type: 'doc',
-      label: 'Managed Connectors',
-      id: 'cloud/managed-connectors',
-    },
-    {
       type: 'category',
-      label: 'Kubernetes',
+      label: 'Managed Connectors',
+      link: { type: 'doc', id: 'cloud/managed-connectors/index'},
       items: [
-        'cloud/kubernetes/development',
-        'cloud/kubernetes/production',       
-      ],
-    },
+        'cloud/managed-connectors/create-s3-sink-connector',
+      ]
+    },                                 
   ],
   homeSidebar : 
   [
