@@ -7,23 +7,41 @@ title: Creating an S3 Sink Connector
     <meta name="description" content="Use the Redpanda Console to create an S3 Sink Connector."/>
 </head>
 
-The Amazon S3 Sink connector exports data from Kafka topics to S3 objects in JSON format.
+The Amazon S3 Sink connector stores Apache Kafka messages in an AWS S3 bucket.
 
 ## Prerequisites
 
 Before you can create an S3 sink connector in the Redpanda Console, you must complete the following tasks:
 
 * In the AWS management console, create an S3 bucket associated with your AWS account ID.
-* In the AWS management console, create an IAM policy to govern access to the bucket. The AWS account that accesses the S3 bucket must have the following permissions:
-    * ListAllMyBuckets
-    * ListBucket
-    * GetBucketLocation
+* In the AWS management console, create an IAM policy to govern access to the bucket. The S3 sink connector that accesses the S3 bucket must have the following permissions:
     * PutObject
     * GetObject
     * AbortMultipartUpload
     * ListMultipartUploadParts
     * ListBucketMultipartUploads
 * In the Redpanda Console, [create a topic](../create-topic).
+
+## Sample IAM policy
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:AbortMultipartUpload",
+                "s3:ListMultipartUploadParts",
+                "s3:ListBucketMultipartUploads"
+            ],
+            "Resource": "arn:aws:s3:::bucket-name/*"
+        }
+    ]
+}
+```
 
 ## Create an S3 sink connector
 
