@@ -30,4 +30,22 @@ Before you can create an S3 sink connector in the Redpanda Console, you must com
 To create an S3 sink connector, follow these steps:
 
 1. From the left menu of the **Cluster** page, select **Kafka Connect**.
-2. 
+2. Click **Create Connector**.
+    The **Create Connector** page opens.
+3. In **Installation Target**, select **connectors**.
+4. Under **Connector Type**, select **S3SinkConnector** and click **Next Step**.
+    The **S3SinkConnector** page opens.
+5. In **Connector name**, type a name for your connector.
+6. In **Key converter class**, select a converter. Choices include:
+    * org.apache.kafka.connect.storage.StringConverter
+    * org.apache.kafka.connect.json.JsonConverter
+    * org.apache.kafka.connect.converters.ByteArrayConverter
+7. In **Topics**, type the name of the topic whose data will be exported to the S3 bucket.
+8. In **Value converter class**, select a converter. The choices are the same as for the **Key converter class**.
+9. Click **AWS** and fill in the following information (available from the AWS management console):
+    * aws.access.key.id
+    * aws.secret.access.key
+    * aws.s3.bucket.name
+    * aws.s3.endpoint
+    * aws.s3.region
+    * aws.s3.part.size.bytes
