@@ -9,8 +9,10 @@ title: Redpanda Cloud Overview
 
 Redpanda offers two ways to provision clusters in the cloud:
 * Dedicated Cloud
-    You host your data in Redpanda’s Virtual Private Cloud (VPC), and Redpanda handles the provisioning, operations, and maintenance for you. Redpanda also performs automatic backups to S3 (for AWS) or GCS (for GCP).
+
+    You host your data in Redpanda’s Virtual Private Cloud (VPC), and Redpanda handles provisioning, operations, and maintenance for you. Redpanda also performs automatic backups to S3 (for AWS) or GCS (for GCP).
 * Bring Your Own Cloud (BYOC)
+
     You deploy Redpanda in your own VPC, so that all data is contained in your own environment. Redpanda handles provisioning, monitoring, and upgrades. Using your own VPC provides an additional layer of security and isolation. You can choose AWS or GCP as your cloud provider.
 
 Both methods offer the following options:
@@ -19,7 +21,7 @@ Both methods offer the following options:
     * A multi-zone cluster is deployed across three availability zones, which provides higher resiliency in the event of a failure in one of the zones.
 * Private networking using VPC peering
 * Ability to export metrics to a 3rd party monitoring system
-* Managed connectors (link to doc here)
+* [Managed connectors](/docs/cloud/managed-connectors)
 * Unlimited retention with tiered storage
 
 
