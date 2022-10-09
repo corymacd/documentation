@@ -14,7 +14,7 @@ The Amazon S3 Sink connector stores Apache Kafka messages in an AWS S3 bucket.
 Before you can create an S3 sink connector in the Redpanda Console, you must complete the following tasks:
 
 * In the AWS management console, create an S3 bucket associated with your AWS account ID.
-* In the AWS management console, create an IAM policy to govern access to the bucket. The S3 sink connector that accesses the S3 bucket must have the following permissions:
+* In the IAM console, create an IAM policy to govern access to the bucket.  must have the following permissions:
     * PutObject
     * GetObject
     * AbortMultipartUpload
@@ -23,6 +23,8 @@ Before you can create an S3 sink connector in the Redpanda Console, you must com
 * In the Redpanda Console, [create a topic](../create-topic).
 
 ## Sample IAM policy
+
+The S3 sink connector that accesses the S3 bucket must have certain permissions, which are listed in the following IAM policy. When you create a policy in the IAM console, you can copy and paste this text into the policy document section. Remember to replace `bucket-name` with the actual name of your S3 bucket.
 
 ```
 {
