@@ -15,7 +15,7 @@ Redpanda offers two ways to provision clusters in the cloud:
 
     You deploy Redpanda in your own VPC, so that all data is contained in your own environment. Redpanda handles provisioning, monitoring, and upgrades. Using your own VPC provides an additional layer of security and isolation. You can choose AWS or GCP as your cloud provider.
 
-Both methods offer the following options:
+Both methods offer the following features:
 * Single-zone or multi-zone availability
     * A single-zone cluster is deployed in one availability zone. If that availability zone fails, the cluster becomes unavailable.
     * A multi-zone cluster is deployed across three availability zones, which provides higher resiliency in the event of a failure in one of the zones.
@@ -24,6 +24,9 @@ Both methods offer the following options:
 * [Managed connectors](/docs/cloud/managed-connectors)
 * Unlimited retention with tiered storage
 
+The following architecture diagram illustrates the relationship between the Redpanda Cloud (the control plane) and a VPC in AWS.
+
+![AWS Cloud Architecture](./aws_cloud_architecture.png)
 
 ## Dedicated Cloud
 
@@ -35,5 +38,4 @@ Setting up a BYOC cluster is initiated from the Redpanda Control Plane. This is 
 1. Bootstrap a VM in your VPC. This VM spins up the agent and the required infrastructure.
 2. The agent communicates with the control plane to pull the control commands.
 
-There is no outbound connection from your VPC to the Redpanda VPC in the control or data path. The following architecture diagram illustrates the communication between the control plane and the data plane when you use a VPC in AWS:
-
+There is no outbound connection from your VPC to the Redpanda VPC in the control or data path.
