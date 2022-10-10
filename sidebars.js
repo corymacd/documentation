@@ -447,7 +447,7 @@
     {
       type: 'doc',
       label: 'Cloud',
-      id: 'cloud/index',
+      id: 'cloud/overview',
     },
   ]
 };
