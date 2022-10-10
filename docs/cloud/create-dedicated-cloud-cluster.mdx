@@ -15,7 +15,7 @@ To create a Redpanda cluster in the Dedicated Cloud, log in to the Redpanda Cons
 
 These instructions explain how to log in to the Redpanda Console, add a namespace, and select Dedicated Cloud for deploying your Redpanda cluster.
 
-1. Go to the Redpanda cloud URL and click **Login**.
+1. Go to the Redpanda cloud URL and click **Log in**.
 The **Enter Organization** page opens.
 2. Type your organization name and click **Continue**.
     The Home page appears.
@@ -39,14 +39,12 @@ After you select Dedicated dloud, create a Redpanda cluster:
     The **Cloud settings** step opens.
 7. For **Provider**, select AWS.
 8. Open the **Region** menu and select a region.
-    The choices are eu-west-3 and us-west-2. Choose the region that is geographically closest to you.
+    Choose the region that is geographically closest to you.
 9. Open the **Zones** menu and select three availability zones, one at a time, for your region.
 10. Click **Next**.
     The **Networking** page appears.
-11. (Optional) In **Network name**, type a name to replace the default name.
-12. In **IP Range**, type a range of IP addresses using CIDR notation to represent your network.
-    For Class A, use 10.0.0.0. For Class B, use 172.16.0.0. For Class C, use 192.168.0.0. The default network IP range is 10.0.0.0/16.
-13. Click **Create**.
+11. Under **Connection Type**, select either **Public Network** or **Private - VPC Peering**.
+12. Click **Create**.
 
 The system displays the message “Cluster creation can take a while. This page will refresh when cluster creation is complete.”
 After the cluster is created, you can click on the cluster name on the **Home** page to see the **Overview** page for that cluster. The **Overview** page contains the following information:

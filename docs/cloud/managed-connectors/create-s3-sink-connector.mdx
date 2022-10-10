@@ -58,20 +58,20 @@ To start configuring an S3 sink connector, choose `S3SinkConnector` as the **Con
 
 ### Configure connector properties
 
-1. In **Connector name**, type a name for your connector.
+1. In **Connector name**, type a name for your connector. As a suggestion, use a name that indicates which S3 bucket the connector is sending data to.
 2. In **Key converter class**, select a converter. Choices include:
     * org.apache.kafka.connect.storage.StringConverter
     * org.apache.kafka.connect.json.JsonConverter
     * org.apache.kafka.connect.converters.ByteArrayConverter
+    * io.confluent.connect.avro.AvroConverter
+    Note: (list unsupported connectors)
 3. In **Topics**, type the name of the topic whose records will be exported to the S3 bucket. If more than one topic will be exported, provide a comma-separated list; for example, `topic1, topic2, topic3`.
 4. In **Value converter class**, select a converter. The choices are the same as for the **Key converter class**.
 5. Click **AWS** and fill in the following information (available from the AWS management console):
     * aws.access.key.id
     * aws.secret.access.key
     * aws.s3.bucket.name
-    * aws.s3.endpoint (you can leave this field empty)
     * aws.s3.region
-    * aws.s3.part.size.bytes (you can use the default value, which is 5242880)
 6. Click **File** and fill in the following information:
     * file.name.prefix
     * file.name.template (you can leave this field empty)
@@ -80,7 +80,7 @@ To start configuring an S3 sink connector, choose `S3SinkConnector` as the **Con
     * file.name.timestamp.timezone
     * file.name.timestamp.source (default is `WALLCLOCK`)
 7. Click **Format** and fill in the following fields:
-    * format.output.type (choices include `csv`, `json`, and `jsonl`)
+    * format.output.type (choices include `csv`, `json`, `jsonl`, and `parquet`)
     * format.output.fields (default is `value`)
     * format.output.fields.value.encoding (default is `base64`)
 8. Click **Next Step**.
@@ -96,7 +96,6 @@ Check that the **Connector Plugin** is correct, and that the information in **Co
     Remember to add a comma at the end of the previous line.
 3. Click **Finish**.
     The **connectors** summary page opens.
-4. Click the refresh symbol at the top of the page to display the newly created connector.
 
 ### Produce a message to a topic
 
