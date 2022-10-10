@@ -42,7 +42,7 @@ The S3 sink connector that accesses the S3 bucket must have certain permissions,
 
 ## Create an S3 sink connector
 
-To create an S3 sink connector, first choose the connector type, then configure connection properties, then review and apply the connector configuration.
+To create an S3 sink connector, first choose the connector type, then configure connector properties, then review and apply the connector configuration. To test the connection, produce a message to the topic and verify that the S3 bucket contains the message.
 
 ### Choose connector type
 
@@ -97,9 +97,9 @@ Check that the **Connector Plugin** is correct, and that the information in **Co
     The **connectors** summary page opens.
 4. Click the refresh symbol at the top of the page to display the newly created connector.
 
-### Produce to a topic
+### Produce a message to a topic
 
-After the connector is created, test the connection by writing to a topic and checking the contents of the S3 bucket in the AWS management console.
+After the connector is created, test the connection by writing to one of your topics and checking the contents of the S3 bucket in the AWS management console.
 
 1. From the left menu, select **Topics**.
 2. On the **Topics** page, click the name of the topic you created for exporting to your S3 bucket.
@@ -117,4 +117,3 @@ After the connector is created, test the connection by writing to a topic and ch
 10. In the AWS management console, display the page for your S3 bucket.
 11. Click the refresh symbol to refresh the page, then verify that your S3 bucket is listed.
 12. Click your S3 bucket name to see the topic.
-
