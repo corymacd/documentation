@@ -36,7 +36,7 @@ Financial transactions (money transfers) require the following guarantees:
 
 These requirements are easy to satisfy when the sender and the recipient of a financial transaction are hosted by the same branch. The operation doesn't leave the consistency domain, and all checks and locks can be performed within a single service (ledger).
 
-Things get more complex with cross-branch financial transactions, because they involve several ledgers, and the operations should be performed atomically (all or nothing). The default approach (saga pattern) breaks a transaction into a sequence of reversible idempotent steps. But this violates the isolation principle and adds complexity, making the application responsible for orchestrating the steps. 
+Things get more complex with cross-branch financial transactions, because they involve several ledgers, and the operations should be performed atomically (all or nothing). The default approach (saga pattern) breaks a transaction into a sequence of reversible idempotent steps; however, this violates the isolation principle and adds complexity, making the application responsible for orchestrating the steps. 
 
 Redpanda natively supports transactions, so it's possible to atomically update several ledgers at the same time. For example:
 
