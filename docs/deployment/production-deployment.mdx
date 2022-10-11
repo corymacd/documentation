@@ -111,7 +111,7 @@ The `minimum_initial_cluster_size` bootstrap configuration property is set to `1
 
 #### Set cluster size to three
 
-With `minimum_initial_cluster_size` set to three, clusters start with three configurable nodes, instantiating a controller Raft group with the seed servers list. The cluster grows as nodes start up. 
+With `minimum_initial_cluster_size=3`, clusters start with three configurable nodes, instantiating a controller Raft group with the seed servers list. The cluster grows as nodes start up. 
 
 Redpanda automatically generates node IDs, guaranteeing that new nodes get unique node IDs. Nodes assign themselves a UUID (persisted in their kv-store), and register themselves with the controller leader, who assigns a uniue node ID. This means that you don't need to include node IDs in configuration files or worry about policies on `node_id` re-use. Redpanda initially starts up without an ID, and a node gets an ID only after it joins the cluster. All nodes can have identical `seed_servers` in their configuration files. 
 
@@ -122,7 +122,7 @@ Redpanda automatically generates node IDs, guaranteeing that new nodes get uniqu
 
 #### Set cluster size to one
 
-This process is more complex and is supported for backward compatibility. It requires that each node has a unique `node_id` set in its configuration file, and exactly one node has an empty `seed_servers` set in its configuration file. A single (root) node instantiates the cluster, and other nodes join it.  
+This process is more complex. It requires that each node has a unique `node_id` set in its configuration file, and exactly one node has an empty `seed_servers` set in its configuration file. A single (root) node instantiates the cluster, and other nodes join it.  
 
 You first configure and start the root node. For the root node, choose 0 as its ID. The `--self` option tells the node which interface address to bind to. Usually you want that to be its private IP.
 
