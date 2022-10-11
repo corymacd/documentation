@@ -14,6 +14,11 @@
 /docs/core/getting-started/quick-start-macos   /docs/core/quickstart/quick-start-macos  301!
 /docs/core/getting-started/quick-start-windows   /docs/core/quickstart/quick-start-windows  301!
 
+/docs/core/quickstart/kubernetes-qs-cloud   /docs/core/reference/redpanda-operator/kubernetes-qs-cloud  301!
+/docs/core/quickstart/kubernetes-qs-local-access  /docs/core/reference/redpanda-operator/kubernetes-qs-local-access  301!
+/docs/core/quickstart/kubernetes-qs-minikube  /docs/core/reference/redpanda-operator/kubernetes-qs-minikube  301!
+
+
 # Development
 /docs/core/features/guide-nodejs   /docs/core/development/guide-nodejs  301!
 
@@ -30,6 +35,11 @@
 /docs/core/reference/well-known-io   /docs/core/deployment/well-known-io  301!
 /docs/core/deployment/well-known-io   /docs/core/deployment/performance-storage-tuning  301!
 /docs/core/getting-started/install-preview   /docs/core/deployment/install-preview  301!
+/docs/deployment/performance-storage-tuning   /docs/deployment/disk-utilization  301!
+/docs/deployment/kubernetes-additional-config  /docs/reference/redpanda-operator/kubernetes-additional-config  301!
+/docs/deployment/arbitrary-configuration  /docs/reference/redpanda-operator/arbitrary-configuration  301!
+/docs/deployment/kubernetes-external-connect  /docs/reference/redpanda-operator/kubernetes-external-connect  301!
+/docs/deployment/kubernetes-connectivity  /docs/reference/redpanda-operator/kubernetes-connectivity  301!
 
 # Cluster Administration
 /docs/core/deploy-self-hosted/configuration   /docs/core/cluster-administration/configuration  301!
@@ -37,7 +47,8 @@
 /docs/core/reference/version-upgrade   /docs/core/cluster-administration/version-upgrade  301!
 /docs/core/cluster-management/configuration   /docs/core/cluster-administration/configuration  301!
 /docs/core/cluster-management/monitoring   /docs/core/cluster-administration/monitoring  301!
-/docs/core/cluster-management/version-upgrade   /docs/core/cluster-administration/version-upgrade  301!
+/docs/core/cluster-management/version-upgrade   /docs/install-upgrade/version-upgrade  301!
+/docs/core/cluster-administration/version-upgrade   /docs/install-upgrade/version-upgrade  301!
 
 # Data Management
 /docs/core/data-management/shadow-indexing /docs/core/data-management/tiered-storage 301!
@@ -45,8 +56,15 @@
 # Security
 /docs/core/features/acls   /docs/core/security/acls  301!
 /docs/core/features/tls-kubernetes   /docs/core/security/tls-kubernetes  301!
+/docs/security/tls-kubernetes  /docs/reference/redpanda-operator/tls-kubernetes  301!
 /docs/core/security/acls  /docs/core/security/index  301!
 /docs/core/security/kubernetes-security  /docs/core/security/security-kubernetes/  301!
+/docs/security/security-kubernetes  /docs/reference/redpanda-operator/security-kubernetes  301!
+/docs/security/kubernetes-mtls  /docs/reference/redpanda-operator/kubernetes-mtls  301!
+/docs/security/kubernetes-sasl  /docs/reference/redpanda-operator/kubernetes-sasl  301!
+
+# Reference
+/docs/reference/faq   /docs/home  301!
 
 
 # Fix for google result on 'redpanda encryption'
@@ -54,3 +72,9 @@
 
 #Fix for old blog post
 /docs/core/introduction/consumer-offsets /docs/core/development/consumer-offsets 301!
+
+#Fix for new rpk page
+/docs/reference/rpk-commands  /docs/reference/rpk 301!
+
+#Fix for duplicate rpk container page
+/docs/deployment/guide-rpk-container /docs/quickstart/quick-start-macos 301!

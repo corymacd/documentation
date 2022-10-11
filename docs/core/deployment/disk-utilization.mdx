@@ -10,7 +10,7 @@ title: Managing Disk Space
 Redpanda provides several ways to manage disk space to ensure the production stability of the cluster. You can:
 * Configure message retention and a log cleanup policy.
 * Configure storage threshold properties, and set up alerts to notify you when free disk space reaches a certain threshold.
-* Use [Continuous Data Balancing](/docs/core/cluster-administration/continuous-data-balancing) to automatically distribute partitions across nodes for more balanced disk usage.
+* Use [Continuous Data Balancing](../../cluster-administration/continuous-data-balancing) to automatically distribute partitions across nodes for more balanced disk usage.
 * Create a ballast file to act as a buffer against an out-of-disk outage.
 
 If free disk space reaches a critically low level, Redpanda blocks clients from producing. 
@@ -47,7 +47,7 @@ To set retention time for a single topic, use `retention.ms`, which overrides `d
   
   To minimize the likelihood of out-of-disk outages, set `retention.ms` to `86400000`. There is no default.
   
-  To set `retention.ms`, run: 
+  To set `retention.ms`:
 
   ```bash
   rpk topic alter-config <topic> --set retention.ms=<retention_time>
@@ -58,7 +58,7 @@ To set retention time for a single topic, use `retention.ms`, which overrides `d
   To minimize the likelihood of out-of-disk outages, set `delete_retention_ms` to `86400000`, which is one day. The default is `604800000`, which is one week.
 
 :::caution 
-Do not set `delete_retention_ms` to `-1` unless you're using <a href="https://docs.redpanda.com/docs/core/data-management/tiered-storage#remote-write" target="_self">remote write with Tiered Storage</a> to upload segments to remote storage. Setting it to `-1` configures indefinite retention, which can fill disk space. 
+Do not set `delete_retention_ms` to `-1` unless you're using [remote write with Tiered Storage](../../data-management/tiered-storage#remote-write) to upload segments to remote storage. Setting it to `-1` configures indefinite retention, which can fill disk space.
 :::
 
 ### Set size-based retention
@@ -70,7 +70,7 @@ To set retention size for a single topic, use `retention.bytes`, which overrides
 
 * `retention.bytes` - Topic-level property that specifies the maximum size of a partition. There is no default. 
 
-  To set `retention.bytes`, run:
+  To set `retention.bytes`:
 
   ```bash
   rpk topic alter-config <topic> --set retention.bytes=<retention_size>
@@ -80,7 +80,7 @@ To set retention size for a single topic, use `retention.bytes`, which overrides
 
   Set this to a value that is lower than the disk capacity, or a fraction of the disk capacity based on the number of partitions per topic. For example, if you have one partition, `retention_bytes` can be 80% of the disk size. If you have 10 partitions, it can be 80% of the disk size divided by 10. The default is `null`, which means that retention based on topic size is disabled.
   
-  To set `retention_bytes`, run:
+  To set `retention_bytes`:
   
   ```bash
   rpk cluster config set retention_bytes <retention_size>
@@ -90,7 +90,7 @@ To set retention size for a single topic, use `retention.bytes`, which overrides
 
 The `log_segment_size` property specifies the size of each log segment.
 
-To set `log_segment_size`, run:
+To set `log_segment_size`:
 
 ```bash
 rpk cluster config set log_segment_size <segment_size>
@@ -98,7 +98,7 @@ rpk cluster config set log_segment_size <segment_size>
 
 If you know which topics will receive more data, it's best to specify the size for each topic. 
 
-To configure log segment size on a topic, run: 
+To configure log segment size on a topic:
 
 ```bash
 rpk topic alter-config <topic> --set segment.bytes=<segment_size>
@@ -106,7 +106,7 @@ rpk topic alter-config <topic> --set segment.bytes=<segment_size>
 
 Keep in mind that very large segments prevent compaction, and very small segments increase the risk of encountering resource limits. To calculate an upper limit on segment size, divide the disk size by the number of partitions. For example, if you have a 128 GB disk and 1000 partitions, the upper limit of the segment size is `134217728`. Default is `1073741824`. 
 
-For details about how to modify cluster configuration properties, see [Cluster configuration](/docs/core/cluster-administration/cluster-property-configuration). 
+For details about how to modify cluster configuration properties, see [Cluster configuration](../../cluster-administration/cluster-property-configuration).
 
 ## Handle full disks
 

@@ -9,14 +9,14 @@ title: Configuring Encryption
 
 By default, Redpanda data is sent unencrypted. A security best practice is to enable encryption with TLS or mTLS. 
 
-For Kubernetes-specific information, see [Redpanda Security on Kubernetes](/docs/core/security/security-kubernetes). 
+For Kubernetes-specific information, see [Redpanda Security on Kubernetes](../../reference/redpanda-operator/security-kubernetes).
 
 ## Prerequisite
 
-TLS certificates are necessary for encryption. You can use your own certificates, either self-signed or issued by a trusted Certificate Authority, or you can use use the Redpanda [prepared script](https://gist.github.com/0x5d/56422a0c447e58d8ccbfa0ce1fd6bac6) to generate certificates:
+TLS certificates are necessary for encryption. You can use your own certificates, either self-signed or issued by a trusted Certificate Authority, or you can use use the Redpanda [prepared script](https://gist.github.com/0x5d/30404e0b3376a3724da828f1db5a3b1d29ffebf5) to generate certificates:
 
 ```bash
-bash <(curl -s https://gist.githubusercontent.com/0x5d/56422a0c447e58d8ccbfa0ce1fd6bac6/raw/933ca97702f6b844f706b674133105a30bdad3ff/generate-certs.sh)
+bash <(curl -s https://gist.github.com/0x5d/56422a0c447e58d8ccbfa0ce1fd6bac6/raw/30404e0b3376a3724da828f1db5a3b1d29ffebf5/generate-certs.sh)
 ```
 
 ## TLS
@@ -61,8 +61,8 @@ schema_registry:
 All APIs, except `rpc_server_tls`, support multiple listeners. 
 
 See also: 
-- [Configuring Listeners](/docs/core/cluster-administration/listener-configuration)
-- [Configuring Redpanda TLS on Kubernetes](/docs/core/security/tls-kubernetes)
+- [Configuring Listeners](../../cluster-administration/listener-configuration)
+- [Configuring Redpanda TLS on Kubernetes](../../reference/redpanda-operator/tls-kubernetes)
 
 ## mTLS
 
@@ -92,9 +92,9 @@ redpanda:
 ```
 
 See also: 
-- [Configuring Listeners](/docs/core/cluster-administration/listener-configuration)
-- [Configuring mTLS with authentication](/docs/core/security/authentication)
-- [Configuring Redpanda mTLS on Kubernetes](/docs/core/security/kubernetes-mtls)
+- [Configuring Listeners](../../cluster-administration/listener-configuration)
+- [Configuring mTLS with authentication](../../security/authentication)
+- [Configuring Redpanda mTLS on Kubernetes](../../reference/redpanda-operator/kubernetes-mtls)
 
 ### Configure mTLS for a Kafka API listener
 
@@ -130,7 +130,7 @@ redpanda:
 // highlight-end
 ```
 
-See Also: [Configuring Listeners](/docs/core/cluster-administration/listener-configuration)
+See Also: [Configuring Listeners](../../cluster-administration/listener-configuration)
 
 ## Using rpk with TLS
 

@@ -8,7 +8,7 @@ title: Okta SSO Setup
 </head>
 
 :::info
-This feature requires an [Enterprise license](/docs/core/introduction/licenses). To upgrade, contact [Redpanda sales](https://redpanda.com/try-redpanda?section=enterprise-cloud).
+This feature requires an [Enterprise license](../../../../introduction/licenses). To upgrade, contact [Redpanda sales](https://redpanda.com/try-redpanda?section=enterprise-cloud).
 :::
 
 Integrating Redpanda Console with Okta allows your users to use their Okta identities to sign in to Redpanda Console.
@@ -16,7 +16,7 @@ This guide is based on the assumption that you already have an Okta account and 
 
 ## Create an OpenID connect application
 
-Refer to the [Okta guide](https://developer.okta.com/docs/core/guides/sign-into-web-app-redirect/-/main/) to create
+Refer to the [Okta guide](https://developer.okta.com/docs/guides/sign-into-web-app-redirect/-/main/) to create
 an application integration for Redpanda Console. As you follow the guide to create the Okta integration, use the following inputs
 when prompted:
 
@@ -37,8 +37,10 @@ Put the following credentials into your Redpanda Console configuration:
 login:
   enabled: true
 
-  # Random string which is used to sign JSON web tokens
-  # It has to be static across all Console instances and restarts
+  # jwtSecret is a random string of at least 10 characters that must be the same for all Console instances. 
+  # This string is used to sign and validate the user session JSON Web Tokens (JWT). 
+  # If this string changes, logged-in Console users will be logged out and will have to initiate a 
+  # new session by logging in again.
   jwtSecret: ""
 
   okta:
@@ -58,7 +60,7 @@ login:
 ## RBAC Okta groups sync
 
 If you want to bind roles to Okta groups, you must set up an API token in Okta so that Redpanda Console can retrieve groups
-and their memberships using the Okta API. To create an API token, refer to the [Okta guide](https://developer.okta.com/docs/core/guides/create-an-api-token/main/).
+and their memberships using the Okta API. To create an API token, refer to the [Okta guide](https://developer.okta.com/docs/guides/create-an-api-token/main/).
 After completing the steps in the guide, insert the created API token into the configuration:
 
 ```yaml
