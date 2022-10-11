@@ -88,7 +88,6 @@ sudo rpk redpanda tune all
 ```
 
 :::note Optional: Benchmark your SSD
-
 On taller machines, Redpanda recommends benchmarking your SSD. This can be done
 with `rpk iotune`. You only need to run this once. For reference, a local NVMe SSD should yield around 1GB/s sustained writes.
 `rpk iotune` captures SSD wear and tear and gives accurate measurements
@@ -104,36 +103,30 @@ sudo rpk iotune # takes 10mins
 
 :::
 
-### Start the initalization process
+### Instantiate Redpanda
 
-Redpanda provides an explicit initialization process where node IDs are automatically generated. This simplifies deployment for testing a multi-node cluster. 
+There are two ways to instantiate Redpanda: explicit initialization (recommended) or implicit initialization (default). 
 
-You can still form clusters by setting up a root node with its ID set to 0. This configuration, which is the default, requires that all nodes have a unique node_id set in their config files, and exactly one node must have seed_servers empty in its config file. With this implicit initialization, orchestrators must be careful not to add new nodes with the same node_id as previously decommissioned nodes.
+#### Explicit initialization (recommended)
 
-With Redpanda's explicit initialization:
-- Node IDs can be omitted from config files.
-- All nodes can have identical seed_servers in their config file.
-- Orchestrators omitting node_id do not need to worry about policies on node_id re-use, as Redpanda picks the IDs.
+The explicit initialization process enables easier deployment with simplified configuration of node IDs and seed servers. 
 
-<!---
-### Configure and start the root node
+Redpanda automatically generates node IDs, so you don't need to include node IDs in config files or worry about policies on `node_id` re-use. Redpanda initially starts up without an ID, and the node gets an ID only after it joins the cluster. 
 
-After the software is installed, you must configure it. 
- 
-The first step is
-to set up the root node. The root node starts as a standalone node, and
-every other one joins it, forming a cluster along the way.
+Additionally, all nodes can have identical `seed_servers` in their config file. The minimum number of seed servers to form a cluster is three, but you can adjust this to increase the robustness of consensus and minimize any chance that new clusters get spuriously formed after nodes are lost or restarted without any data. 
 
-For the root node, choose 0 as its ID. The `--self` option tells the node which interface address to bind to. Usually you want that to be its private IP.
+It's important to have one of more seed servers in each fault domain (such as rack, cloud AZ). A higher number provides a stronger guarantee that clusters don’t fracture unintentionally.
+
+#### Implicit initialization (default)
+
+Implicit initialization is supported for backward compatibility. This process is more complex. It requires that each node have a unique `node_id` set in its config file, and exactly one node must have `seed_servers` empty in its config file. 
+
+You first configure and start the root node. The root node starts as a standalone node, and every other node joins it, forming a cluster along the way. You must be careful not to add new nodes with the same `node_id` as decommissioned nodes. For the root node, choose 0 as its ID. The `--self` option tells the node which interface address to bind to. Usually you want that to be its private IP.
 
 ```bash
 sudo rpk config bootstrap --id 0 --self <ip> && \
 sudo systemctl start redpanda-tuner redpanda
 ```
-
-If clients will connect from a different subnet, see [Configuring Listeners](/docs/cluster-administration/listener-configuration).
-
-### Configure and start other nodes
 
 For every other node, you have to choose a unique integer ID for it, and let
 it know where to reach the root node.
@@ -144,7 +137,8 @@ sudo rpk config bootstrap --id <unique id> \
 --ips <root node ip> &&                    \
 sudo systemctl start redpanda-tuner redpanda
 ```
---->
+
+If clients will connect from a different subnet, see [Configuring Listeners](/docs/cluster-administration/listener-configuration).
 
 ### Verify the installation
 
