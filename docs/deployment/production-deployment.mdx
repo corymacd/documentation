@@ -103,25 +103,28 @@ sudo rpk iotune # takes 10mins
 
 :::
 
-### Instantiate Redpanda
+### Instantiate a cluster
 
-There are two ways to instantiate Redpanda: explicit initialization (recommended) or implicit initialization (default). 
+The `minimum_initial_cluster_size` bootstrap configuration property is set to `1` by default. For production deployments, set this to `3`. This enables a simpler configuration of node IDs and seed servers.
 
-#### Explicit initialization (recommended)
 
-The explicit initialization process enables easier deployment with simplified configuration of node IDs and seed servers. 
 
-Redpanda automatically generates node IDs, so you don't need to include node IDs in config files or worry about policies on `node_id` re-use. Redpanda initially starts up without an ID, and the node gets an ID only after it joins the cluster. 
+#### Set cluster size to three
 
-Additionally, all nodes can have identical `seed_servers` in their config file. The minimum number of seed servers to form a cluster is three, but you can adjust this to increase the robustness of consensus and minimize any chance that new clusters get spuriously formed after nodes are lost or restarted without any data. 
+With `minimum_initial_cluster_size` set to three, clusters start with three configurable nodes, instantiating a controller Raft group with the seed servers list. The cluster grows as nodes start up. 
 
-It's important to have one of more seed servers in each fault domain (such as rack, cloud AZ). A higher number provides a stronger guarantee that clusters don’t fracture unintentionally.
+Redpanda automatically generates node IDs, guaranteeing that new nodes get unique node IDs. Nodes assign themselves a UUID (persisted in their kv-store), and register themselves with the controller leader, who assigns a uniue node ID. This means that you don't need to include node IDs in configuration files or worry about policies on `node_id` re-use. Redpanda initially starts up without an ID, and a node gets an ID only after it joins the cluster. All nodes can have identical `seed_servers` in their configuration files. 
 
-#### Implicit initialization (default)
+:::note Notes
+- The minimum number of seed servers to form a cluster is three, but you can adjust this to increase the robustness of consensus and minimize any chance that new clusters get spuriously formed after nodes are lost or restarted without any data. 
+- It's important to have one of more seed servers in each fault domain (such as rack or cloud AZ). A higher number provides a stronger guarantee that clusters don’t fracture unintentionally.
+:::
 
-Implicit initialization is supported for backward compatibility. This process is more complex. It requires that each node have a unique `node_id` set in its config file, and exactly one node must have `seed_servers` empty in its config file. 
+#### Set cluster size to one
 
-You first configure and start the root node. The root node starts as a standalone node, and every other node joins it, forming a cluster along the way. You must be careful not to add new nodes with the same `node_id` as decommissioned nodes. For the root node, choose 0 as its ID. The `--self` option tells the node which interface address to bind to. Usually you want that to be its private IP.
+This process is more complex and is supported for backward compatibility. It requires that each node has a unique `node_id` set in its configuration file, and exactly one node has an empty `seed_servers` set in its configuration file. A single (root) node instantiates the cluster, and other nodes join it.  
+
+You first configure and start the root node. For the root node, choose 0 as its ID. The `--self` option tells the node which interface address to bind to. Usually you want that to be its private IP.
 
 ```bash
 sudo rpk config bootstrap --id 0 --self <ip> && \
@@ -139,6 +142,10 @@ sudo systemctl start redpanda-tuner redpanda
 ```
 
 If clients will connect from a different subnet, see [Configuring Listeners](/docs/cluster-administration/listener-configuration).
+
+:::note
+With `minimum_initial_cluster_size` set to one, be careful not to add new nodes with the same `node_id` as decommissioned nodes. (Another node replaying its controller log may pass through historical metadata in which it thinks the `node_id` should hold topics that the new node doesn't have.)
+:::
 
 ### Verify the installation
 
