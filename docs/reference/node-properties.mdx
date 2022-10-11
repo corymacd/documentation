@@ -14,7 +14,7 @@ After you change a node-level property setting, you must restart the node for th
 
 | Property | Description |
 | :-------- | :----------- |
-| node_id | A number that identifies the node within the cluster. This value can be assigned automatically by a deployment tool, or it can be assigned by the user. Each node must have a unique node_id, and nodes should be numbered in sequence. Note: This property is required, and must not be changed once a node joins a cluster. <br/><br/>Default: Null |
+| node_id | A number that identifies the node within the cluster. This value can be assigned automatically, or it can be assigned by the user. Each node must have a unique node_id, and nodes should be numbered in sequence. This property must not be changed once a node joins a cluster. <br/><br/>For more information, see [Instantiate a cluster](../../deployment/production-deployment/#instantiate-a-cluster). <br/><br/>Default: Null |
 | data_directory | The folder where Redpanda streaming data files are stored. <br/><br/>Default: /var/lib/redpanda/data |
 
 ### Optional properties 
@@ -35,4 +35,4 @@ After you change a node-level property setting, you must restart the node for th
 | rack | A rack is a label that identifies a failure zone. Apply the same label to all nodes in the same failure zone. When enable_rack_awareness is set to true at the cluster level, the system uses the rack labels to spread partition replicas across different failure zones. <br/><br/>Default: Null. |
 | rpc_server | Remote Procedure Call (RPC) server IP address. <br/><br/>Default: 127.0.0.1:33145. |
 | rpc_server_tls | TLS configuration for RPC server. <br/><br/>Default: Null |
-| seed_servers | List of the seed servers used to join the current cluster. If the seed_servers list is empty, the node will be a cluster root and it will form a new cluster. <br/><br/>Default: Null. |
+| seed_servers | List of the seed servers used to join the current cluster. If the seed_servers list is empty, the node will be a cluster root and it will form a new cluster. <br/><br/>For more information, see [Instantiate a cluster](../../deployment/production-deployment/#instantiate-a-cluster).<br/><br/>Default: Null. |
