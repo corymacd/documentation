@@ -107,8 +107,6 @@ sudo rpk iotune # takes 10mins
 
 The `minimum_initial_cluster_size` bootstrap configuration property is set to `1` by default. For production deployments, set this to `3`. This enables a simpler configuration of node IDs and seed servers.
 
-
-
 #### Set cluster size to three
 
 With `minimum_initial_cluster_size=3`, clusters start with three configurable nodes, instantiating a controller Raft group with the seed servers list. The cluster grows as nodes start up. 
@@ -122,7 +120,7 @@ Redpanda automatically generates node IDs, guaranteeing that new nodes get uniqu
 
 #### Set cluster size to one
 
-This process is more complex. It requires that each node has a unique `node_id` set in its configuration file, and exactly one node has an empty `seed_servers` set in its configuration file. A single (root) node instantiates the cluster, and other nodes join it.  
+With `minimum_initial_cluster_size=1`, the process is more complex. This requires that each node has a unique `node_id` set in its configuration file, and exactly one node has an empty `seed_servers` set in its configuration file. A single (root) node instantiates the cluster, and other nodes join it.  
 
 You first configure and start the root node. For the root node, choose 0 as its ID. The `--self` option tells the node which interface address to bind to. Usually you want that to be its private IP.
 
