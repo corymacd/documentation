@@ -238,7 +238,7 @@ The transformation reads a record from topic(1), processes it, and writes it to 
    }
 ```
 
-In the publishing to multiple partitions example, the request was coming from outside the system, and it was the application's responsibility to discover the true status of a timed out transaction. 
+In the example showing publishing to multiple partitions, the request came from outside the system, and it was the application's responsibility to discover the true status of a timed-out transaction. 
 
 This consume-transform-loop example, however, is a closed system. Upon re-initialization of the consumer and producer, the system automatically discovers the moment it was interrupted and continues from that place.
 
