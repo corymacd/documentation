@@ -12,7 +12,7 @@ The Amazon S3 Sink connector stores Apache Kafka messages in an AWS S3 bucket.
 
 ## Prerequisites
 
-Before you can create an S3 sink connector in the Redpanda Console, you must complete the following tasks:
+Before you can create an S3 sink connector in the Redpanda Console, you must complete these tasks:
 
 * In the AWS management console, create an S3 bucket associated with your AWS account ID.
 * In the IAM console, create an IAM policy to govern access to the bucket. For the minimum list of required permissions, see the sample IAM policy below.
@@ -43,7 +43,7 @@ The S3 sink connector that accesses the S3 bucket must have certain permissions,
 
 ## Create an S3 sink connector
 
-To create an S3 sink connector, first choose the connector type, then configure connector properties, then review and apply the connector configuration. To test the connection, produce a message to the topic and verify that the S3 bucket contains the message.
+To create an S3 sink connector, first choose the connector type, then configure connector properties, and finally, review and apply the connector configuration. To test the connection, produce a message to the topic and verify that the S3 bucket contains the message.
 
 ### Choose connector type
 
@@ -60,33 +60,33 @@ To start configuring an S3 sink connector, choose `S3SinkConnector` as the **Con
 
 1. In **Connector name**, type a name for your connector. As a suggestion, use a name that indicates which S3 bucket the connector is sending data to.
 2. In **Key converter class**, select a converter. Choices include:
-    * org.apache.kafka.connect.storage.StringConverter
-    * org.apache.kafka.connect.json.JsonConverter
-    * org.apache.kafka.connect.converters.ByteArrayConverter
-    * io.confluent.connect.avro.AvroConverter
+    * `org.apache.kafka.connect.storage.StringConverter`
+    * `org.apache.kafka.connect.json.JsonConverter`
+    * `org.apache.kafka.connect.converters.ByteArrayConverter`
+    * `io.confluent.connect.avro.AvroConverter`
     :::Note
     The following converters are not supported:
-    * io.confluent.connect.protobuf.ProtobufConverter
-    * io.confluent.connect.json.JsonSchemaConverter
+    * `io.confluent.connect.protobuf.ProtobufConverter`
+    * `io.confluent.connect.json.JsonSchemaConverter`
     ::: 
 3. In **Topics**, type the name of the topic whose records will be exported to the S3 bucket. If more than one topic will be exported, provide a comma-separated list; for example, `topic1, topic2, topic3`.
 4. In **Value converter class**, select a converter. The choices are the same as for the **Key converter class**.
 5. Click **AWS** and fill in the following information (available from the AWS management console):
-    * aws.access.key.id
-    * aws.secret.access.key
-    * aws.s3.bucket.name
-    * aws.s3.region
+    * `aws.access.key.id`
+    * `aws.secret.access.key`
+    * `aws.s3.bucket.name`
+    * `aws.s3.region`
 6. Click **File** and fill in the following information:
-    * file.name.prefix
-    * file.name.template (you can leave this field empty)
-    * file.compression.type (default is `none`)
-    * file.max.records (default is 0)
-    * file.name.timestamp.timezone
-    * file.name.timestamp.source (default is `WALLCLOCK`)
+    * `file.name.prefix` (required)
+    * `file.name.template` (optional)
+    * `file.compression.type` (default is `none`)
+    * `file.max.records` (default is 0)
+    * `file.name.timestamp.timezone`
+    * `file.name.timestamp.source` (default is `WALLCLOCK`)
 7. Click **Format** and fill in the following fields:
-    * format.output.type (choices include `csv`, `json`, `jsonl`, and `parquet`)
-    * format.output.fields (default is `value`)
-    * format.output.fields.value.encoding (default is `base64`)
+    * `format.output.type` (choices include `csv`, `json`, `jsonl`, and `parquet`)
+    * `format.output.fields` (default is `value`)
+    * `format.output.fields.value.encoding` (default is `base64`)
 8. Click **Next Step**.
     The **Review** page opens.
 
@@ -103,7 +103,7 @@ Check that the **Connector Plugin** is correct, and that the information in **Co
 
 ### Produce a message to a topic
 
-After the connector is created, test the connection by writing to one of your topics and checking the contents of the S3 bucket in the AWS management console.
+After the connector is created, test the connection by writing to one of your topics, then checking the contents of the S3 bucket in the AWS management console.
 
 1. From the left menu, select **Topics**.
 2. On the **Topics** page, click the name of the topic you created for exporting to your S3 bucket.
@@ -116,8 +116,8 @@ After the connector is created, test the connection by writing to one of your to
     A success message appears.
 7. Click **Close** to close the message.
 8. From the left menu, select **Kafka Connect**.
-9. Under **Cluster**, click `connectors`.
-    The **connectors** summary page opens, and the state for **Connector** shows `Running`.
+9. Under **Cluster**, click the cluster name.
+    The cluster summary page opens, and the state for **Connector** shows `Running`.
 10. In the AWS management console, display the page for your S3 bucket.
 11. Click the refresh symbol to refresh the page, then verify that your S3 bucket is listed.
 12. Click your S3 bucket name to see the topic.
