@@ -98,6 +98,11 @@ module.exports = {
           label: "Kubernetes",
           id: "quickstart/kubernetes-qs-dev",
         },
+        {
+          type: "doc",
+          label: "Installing rpk",
+          id: "quickstart/rpk-install",
+        },
       ],
     },
     {

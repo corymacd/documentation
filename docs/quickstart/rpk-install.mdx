@@ -1,0 +1,78 @@
+---
+title: Installing rpk
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+Redpanda Keeper (rpk) is a single binary application written in [Go](https://go.dev/) to interact with your Redpanda clusters. 
+
+It’s designed to be a Swiss Army Knife CLI application with simple commands that make it easy to use. It is handy not only for developers who want to evaluate Redpanda on their local machine, but also for developers who want to build, maintain, and debug a production streaming system using Redpanda.
+
+As mentioned above, `rpk` is a single binary application. 
+
+It is installed with the Redpanda broker, which is contained in all Redpanda packages. It also provides autocompletion, which helps you interact with rpk easily using the tab button. Please review the [rpk documentation](../../reference/rpk/) for more information.
+
+To install `rpk` bundled with Redpanda, check our [60-Second guides](../).
+
+It's also possible to install the `rpk` binary independently. 
+
+<Tabs>
+<TabItem value="ubuntu" label="Ubuntu" default>
+
+Download the `rpk` archive for Ubuntu with:
+
+```bash
+curl -LO https://github.com/redpanda-data/redpanda/releases/latest/download/rpk-linux-amd64.zip
+```
+
+Unpack the archive to `/usr/local/bin` or any location in your `$PATH` with:
+
+```bash
+unzip rpk-linux-amd64.zip
+```
+
+</TabItem>
+<TabItem value="fedora" label="Fedora/RedHat" default>
+
+Download the `rpk` archive for Fedora/RedHat with:
+
+```bash
+curl -LO https://github.com/redpanda-data/redpanda/releases/latest/download/rpk-linux-amd64.zip
+```
+
+Unpack the archive to `/usr/local/bin` or any location in your `$PATH` with:
+
+```bash
+unzip rpk-linux-amd64.zip
+```
+
+</TabItem>
+
+  <TabItem value="macos" label="macOS" default>
+
+Download the `rpk` archive for macOS with:
+
+```bash
+curl -LO https://github.com/redpanda-data/redpanda/releases/latest/download/rpk-darwin-amd64.zip
+```
+
+Unpack the archive to `/usr/local/bin` or any location in your `$PATH` with:
+```bash
+unzip rpk-darwin-amd64.zip
+```
+
+  </TabItem>
+</Tabs>
+
+Once it’s completed, run rpk version, which shows the rpk binary version, not the Redpanda server version.
+
+```bash
+rpk version
+```
+
+The output looks like:
+
+```bash
+v22.1.2 (rev 449eef2)
+```
