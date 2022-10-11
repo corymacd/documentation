@@ -24,7 +24,7 @@ The two primary use cases for transactions are:
 
 ### Atomic publishing to multiple partitions
 
-A banking IT system illustrates the necessity for transactions with its event sourcing microservice architecture. A bank has multiple branches, and each branch is an independent microservice that manages its own non-intersecting set of accounts. Each branch keeps its own ledger, which is represented as a Redpanda partition. When a branch-representing microservice starts, it replays its ledger to reconstruct the actual state.
+With its event sourcing microservice architecture, banking IT systems aptly illustrate the necessity for transactions. A bank has multiple branches, and each branch is an independent microservice that manages its own non-intersecting set of accounts. Each branch keeps its own ledger, which is represented as a Redpanda partition. When a branch-representing microservice starts, it replays its ledger to reconstruct the actual state.
 
 Financial transactions (money transfers) require the following guarantees:
 
