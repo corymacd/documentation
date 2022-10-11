@@ -110,7 +110,7 @@ Redpanda natively supports transactions, so it's possible to atomically update s
    }
 ```
 
-When a transaction fails before the `commitTransaction` attempt, it's safe to assume that it was not executed. When it fails after the `commitTransaction` attempt, the true status is unknown. Redpanda only guarantees that there isn't a partial result: either the transaction is committed, or it is fully rolled back.
+When a transaction fails before a `commitTransaction` attempt, you can assume that it is not executed. When a transaction fails after a `commitTransaction` attempt completes, then the true transaction status is unknown. Redpanda only guarantees that there isn't a partial result: either the transaction is committed and complete, or it is fully rolled back.
 
 ### Atomic consume-transform-produce loop
 
