@@ -248,7 +248,7 @@ Additionally, the consume-transform-loop automatically scales by the number of p
 
 Idempotence must be enabled to use transactions. By default, the following cluster properties are enabled: `enable_idempotence` and `enable_transactions`. See [Idempotent Producers](/docs/development/idempotent-producers). 
 
-To facilitate transactions, increase the replication factor of the internal topic in the following properties: 
+To facilitate transactions, increase the replication factor of the internal topic as shown in the following properties: 
    - `id_allocator_replication: 3`
    - `transaction_coordinator_replication: 3`
 
