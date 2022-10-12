@@ -5,14 +5,14 @@ displayed_sidebar: cloudSidebar
 
 <head>
     <meta name="title" content="Create an S3 Sink Connector | Redpanda Docs"/>
-    <meta name="description" content="Use the Redpanda Console to create an S3 Sink Connector."/>
+    <meta name="description" content="Use the Redpanda Cloud to create an S3 Sink Connector."/>
 </head>
 
 The Amazon S3 Sink connector stores Apache Kafka messages in an AWS S3 bucket.
 
 ## Prerequisites
 
-Before you can create an S3 sink connector in the Redpanda Console, you must complete these tasks:
+Before you can create an S3 sink connector in the Redpanda Cloud, you must complete these tasks:
 
 * In the AWS management console, create an S3 bucket associated with your AWS account ID.
 * In the IAM console, create an IAM policy to govern access to the bucket. For the minimum list of required permissions, see the sample IAM policy below.
@@ -64,11 +64,13 @@ To start configuring an S3 sink connector, choose `S3SinkConnector` as the **Con
     * `org.apache.kafka.connect.json.JsonConverter`
     * `org.apache.kafka.connect.converters.ByteArrayConverter`
     * `io.confluent.connect.avro.AvroConverter`
+
     :::Note
     The following converters are not supported:
     * `io.confluent.connect.protobuf.ProtobufConverter`
     * `io.confluent.connect.json.JsonSchemaConverter`
-    ::: 
+    :::
+
 3. In **Topics**, type the name of the topic whose records will be exported to the S3 bucket. If more than one topic will be exported, provide a comma-separated list; for example, `topic1, topic2, topic3`.
 4. In **Value converter class**, select a converter. The choices are the same as for the **Key converter class**.
 5. Click **AWS** and fill in the following information (available from the AWS management console):
@@ -92,7 +94,7 @@ To start configuring an S3 sink connector, choose `S3SinkConnector` as the **Con
 
 ### Review connector configuration
 
-Check that the **Connector Plugin** is correct, and that the information in **Connector Properties** is correct.
+Check that the **Connector Plugin** is correct and that the information in **Connector Properties** is correct.
 
 1. Verify that the **Connector Properties** file contains all the values you set on the **S3SinkConnector** page.
 2. Manually edit the file and add the following line:

@@ -21,9 +21,9 @@ Both methods offer the following features:
     * A single-zone cluster is deployed in one availability zone. If that availability zone fails, the cluster becomes unavailable.
     * A multi-zone cluster is deployed across three availability zones, which provides higher resiliency in the event of a failure in one of the zones.
 * Private networking using VPC peering
-* Ability to export metrics to a 3rd party monitoring system
+* Ability to export metrics to a 3rd-party monitoring system
 * [Managed connectors](/docs/cloud/managed-connectors)
-* Unlimited retention with tiered storage
+* Unlimited retention with Tiered Storage
 
 The following architecture diagram illustrates the relationship between the Redpanda Cloud (the control plane) and a VPC in AWS.
 
@@ -35,7 +35,7 @@ Dedicated clusters are single-tenant deployments launched from the Redpanda cont
 
 ## BYOC
 
-Setting up a BYOC cluster is initiated from the Redpanda Control Plane. This is a two-step process:
+Setting up a BYOC cluster is initiated from the Redpanda control plane. This is a two-step process:
 1. Bootstrap a VM in your VPC. This VM spins up the agent and the required infrastructure.
 2. The agent communicates with the control plane to pull the control commands.
 
