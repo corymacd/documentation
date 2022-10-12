@@ -66,9 +66,11 @@ To start configuring an S3 sink connector, choose `S3SinkConnector` as the **Con
     * `io.confluent.connect.avro.AvroConverter`
 
     :::Note
+
     The following converters are not supported:
     * `io.confluent.connect.protobuf.ProtobufConverter`
     * `io.confluent.connect.json.JsonSchemaConverter`
+    
     :::
 
 3. In **Topics**, type the name of the topic whose records will be exported to the S3 bucket. If more than one topic will be exported, provide a comma-separated list; for example, `topic1, topic2, topic3`.
